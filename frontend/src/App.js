@@ -9,9 +9,9 @@ function App() {
     city:''
   })
   const[data,setData] = useState('')
+  const[error,setError]=useState('')
   const handelChange = (e) =>{
     setInput({...input,[e.target.name]:e.target.value})
-
   }
   console.log(input)
   const handelSubmit = async(e)=>{ 
@@ -25,9 +25,16 @@ function App() {
     })
 const data = await response.json()
 console.log(data)
-setData(data)
-setInput(' ')
-    
+if(data.error){
+  setError(data.error)
+  setData('')
+  setInput({city:''})
+}
+if(!data.error){
+  setData(data)
+  setError('')
+  setInput({city:''})
+}
   }
 
 
@@ -38,10 +45,11 @@ setInput(' ')
      <Form className='w-50 mx-auto'>
       <Form.Label>City Name</Form.Label>
       <Form.Control type = 'text' name = "city" value={input.city} onChange = {handelChange}/>
-    
       <Button onClick={handelSubmit}>Submit</Button>
       <br/>
-      { data ?? <h1>data</h1>}
+      <h1>{data}</h1>
+      {error && <p className ='text-danger'>{error}</p>}
+      
       </Form>
     </div>
   );
